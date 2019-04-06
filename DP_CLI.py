@@ -1,6 +1,4 @@
 def knapsack_dp(items, C):
-    NAME, WEIGHT, VALUE = range(3)
-
     # order by max value per item weight
     items = sorted(items, key=lambda item: item[VALUE] / float(item[WEIGHT]), reverse=True)
 
@@ -25,3 +23,16 @@ def knapsack_dp(items, C):
     bagged = sorted((items[i][NAME], n) for i, n in enumerate(bagged) if n)
     return value, weight, bagged
 
+NAME, WEIGHT, VALUE = range(3)
+
+capacity= int(input("Donnez la capacité du sac à dos: "))
+nbr= int(input("Donnez le nombre d'objets: "))
+items= []
+for i in range(nbr):
+    name=input("nom de l'objet: ")
+    weight=int(input("poids de l\'objet: "))
+    value=int(input("valeur de l\'objet: "))
+    items.append([name,weight,value])
+
+print(items)
+print (knapsack_dp(items,capacity))

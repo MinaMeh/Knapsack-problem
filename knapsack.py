@@ -1,6 +1,9 @@
 import sys
+import time
+from DP import knapsack_dp
 from PyQt5.QtWidgets import *
 from PyQt5 import QtCore
+from PyQt5 import QtGui
 class MyTable(QTableWidget):
 	"""docstring for MyTable"""
 	def __init__(self,  parent=None):
@@ -25,6 +28,8 @@ class MyTable(QTableWidget):
 		if self.rowCount() > 0:
 			self.removeRow(self.rowCount()-1)
 	def showResult(self):
+		
+		items=[]
 		for row in range(self.rowCount()):
 			name=self.item(row,0).text()
 			weight=int(self.item(row,1).text())
@@ -32,16 +37,23 @@ class MyTable(QTableWidget):
 			items.append([name,weight,value])
 		print(items)
 		capacity=int(a_window.capacity_text.text())
-		solution=knapsack_dp(items, capacity)[2]
+		start=time.time()
+		solution=knapsack_dp(items, capacity)
+		solution_items=solution[2]
+		end=time.time()
+		print(end-start)
 		result=a_window.result_table
 		result.setRowCount(0)
-		for i,itemSol in enumerate(solution):
+		for i,itemSol in enumerate(solution_items):
 			row=result.rowCount()
 			result.insertRow(row)
 			result.setItem(i,0,QTableWidgetItem(itemSol[0]))
 			result.setItem(i,1,QTableWidgetItem(str(itemSol[1])))
 			print(itemSol)
 
+		a_window.StatsTable.setItem(0,0,QTableWidgetItem(str(solution[0])))
+		a_window.StatsTable.setItem(1,0,QTableWidgetItem(str(solution[1])))
+		a_window.StatsTable.setItem(2,0,QTableWidgetItem(str(end-start)))
 
 class ResultTable(QTableWidget):
 	"""docstring for MyTable"""
@@ -52,7 +64,17 @@ class ResultTable(QTableWidget):
 		self.verticalHeader().hide()
 		self.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
 
-				
+
+
+class StatsTable(QTableWidget):
+	"""docstring for MyTable"""
+	def __init__(self,  parent=None):
+		super(StatsTable, self).__init__(3, 1, parent)
+		headertitle = ("Valeur totale","Poids total","Temps d'éxecution")
+		self.setVerticalHeaderLabels(headertitle)
+		self.horizontalHeader().hide()
+		self.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+		self.verticalHeader().setSectionResizeMode(QHeaderView.Stretch)
 
 class window(QWidget):
 	def __init__(self):
@@ -71,71 +93,74 @@ class window(QWidget):
 		objects_table=MyTable()
 		table_hbox=QHBoxLayout()
 		table_hbox.addWidget(objects_table)
-
-		#result section
-		self.show_result_btn=QPushButton("Afficher la solution")
-		result_btn=QHBoxLayout()
-		result_btn.addWidget(self.show_result_btn)
-
-		#result table
-		self.result_table=ResultTable()
-		result_table=QHBoxLayout()
-		result_table.addWidget(self.result_table)
-
-		#Vbox1
-		self.add_btn=QPushButton("Ajouter un objet")
+		# Vbox1
+		self.add_btn = QPushButton("Ajouter un objet")
 		self.add_btn.clicked.connect(objects_table._addrow)
-		self.show_result_btn.clicked.connect(objects_table.showResult)
 
-		v_box1=QVBoxLayout()
+		v_box1 = QVBoxLayout()
 		v_box1.addLayout(capacity_hbox)
 		v_box1.addWidget(self.add_btn)
 		v_box1.addLayout(table_hbox)
 
+		#result section
+		self.show_result_btn=QPushButton("Afficher la solution")
+		self.show_result_btn.clicked.connect(objects_table.showResult)
+
+		#result table
+		self.result_table=ResultTable()
+		self.StatsTable=StatsTable()
+		self.DP_label=QLabel("La programmation dynamique: ")
+		self.DP_label.setStyleSheet("font-family: seorge; font: bold 20px")
 		#Vbox2
 		v_box2=QVBoxLayout()
-		v_box2.addLayout(result_btn)
-		v_box2.addLayout(result_table)
+		v_box2.addWidget(self.DP_label)
+		v_box2.addWidget(self.show_result_btn)
+		v_box2.addWidget(self.StatsTable,1)
+		v_box2.addWidget(self.result_table,4)
 
+
+		self.result_table2=ResultTable()
+		self.StatsTable2=StatsTable()
+		self.BB_label=QLabel("Branch and Bound ")
+		self.BB_label.setStyleSheet("font-family: seorge; font: bold 20px")
+		self.show_result_btn2=QPushButton("Afficher la solution")
+		#VBox3
+		v_box3=QVBoxLayout()
+		v_box3.addWidget(self.BB_label)
+			v_box3.addWidget(self.show_result_btn2)
+		v_box3.addWidget(self.StatsTable2,1)
+		v_box3.addWidget(self.result_table2,4)
 
 		#main layout
 		h_box=QHBoxLayout()
 		h_box.addLayout(v_box1,1)
 		h_box.addLayout(v_box2,1)
-		
+		h_box.addLayout(v_box3,1)
 		self.setLayout(h_box)
-		self.setGeometry(300,100,800,200)
+		self.setGeometry(100,100,1500,800)
 		self.setWindowTitle("Le problème du sac à dos")
 		
 		self.show()
-def knapsack_dp(items, C):
-    # order by max value per item weight
-    items = sorted(items, key=lambda item: item[VALUE]/float(item[WEIGHT]), reverse=True)
- 
-    # Sack keeps track of max value so far as well as the count of each item in the tab
-    tab = [(0, [0 for i in items]) for i in range(0, C+1)]   # value, [item tab]
- 
-    for i,item in enumerate(items):
-        name, weight, value = item
-        for c in range(weight, C+1):
-            tabbefore = tab[c-weight]  # previous max tab to try adding this item to
-            new_value = tabbefore[0] + value
-            used = tabbefore[1][i]
-            if tab[c][0] < new_value:
-                # old max tab with this added item is better
-                tab[c] = (new_value, tabbefore[1][:])
-                tab[c][1][i] +=1   # use one more
- 
-    value, bagged = tab[C]
-    numbagged = sum(bagged)
-    weight = sum(items[i][1]*n for i,n in enumerate(bagged))
-    # convert to (iten, count) pairs) in name order
-    bagged = sorted((items[i][NAME], n) for i,n in enumerate(bagged) if n)
-    return value, weight, bagged
+
 NAME, WEIGHT, VALUE = range(3)
 items= []	
 capacity=0
 app= QApplication(sys.argv)
 app.setStyle('Fusion')
+palette = QtGui.QPalette()
+palette.setColor(QtGui.QPalette.Window, QtGui.QColor(53, 53, 53))
+palette.setColor(QtGui.QPalette.WindowText, QtCore.Qt.white)
+palette.setColor(QtGui.QPalette.Base, QtGui.QColor(15, 15, 15))
+palette.setColor(QtGui.QPalette.AlternateBase, QtGui.QColor(53, 53, 53))
+palette.setColor(QtGui.QPalette.ToolTipBase, QtCore.Qt.white)
+palette.setColor(QtGui.QPalette.ToolTipText, QtCore.Qt.white)
+palette.setColor(QtGui.QPalette.Text, QtCore.Qt.white)
+palette.setColor(QtGui.QPalette.Button, QtGui.QColor(53, 53, 53))
+palette.setColor(QtGui.QPalette.ButtonText, QtCore.Qt.white)
+palette.setColor(QtGui.QPalette.BrightText, QtCore.Qt.red)
+palette.setColor(QtGui.QPalette.Highlight, QtGui.QColor(142, 45, 197).lighter())
+palette.setColor(QtGui.QPalette.HighlightedText, QtCore.Qt.black)
+app.setPalette(palette)
+app.setFont(QtGui.QFont("Seorge"))
 a_window=window()
 sys.exit(app.exec_())
