@@ -12,7 +12,7 @@ def knapsack_dp(items, C):
             new_value = tabbefore[0] + value
             used = tabbefore[1][i]
             if tab[c][0] < new_value:
-                # old max tab with this added item is better
+                # old max tab wi        th this added item is better
                 tab[c] = (new_value, tabbefore[1][:])
                 tab[c][1][i] += 1  # use one more
 

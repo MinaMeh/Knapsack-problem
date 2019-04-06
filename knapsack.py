@@ -1,6 +1,7 @@
 import sys
 import time
 from DP import knapsack_dp
+from BranchAndBound import  knapsack_BB
 from PyQt5.QtWidgets import *
 from PyQt5 import QtCore
 from PyQt5 import QtGui
@@ -41,7 +42,6 @@ class MyTable(QTableWidget):
 		solution=knapsack_dp(items, capacity)
 		solution_items=solution[2]
 		end=time.time()
-		print(end-start)
 		result=a_window.result_table
 		result.setRowCount(0)
 		for i,itemSol in enumerate(solution_items):
@@ -53,8 +53,35 @@ class MyTable(QTableWidget):
 
 		a_window.StatsTable.setItem(0,0,QTableWidgetItem(str(solution[0])))
 		a_window.StatsTable.setItem(1,0,QTableWidgetItem(str(solution[1])))
-		a_window.StatsTable.setItem(2,0,QTableWidgetItem(str(end-start)))
+		a_window.StatsTable.setItem(2,0,QTableWidgetItem(str((end-start)*1000)+"ms"))
 
+	def showResult2(self):
+
+		items = []
+		for row in range(self.rowCount()):
+			name = self.item(row, 0).text()
+			weight = int(self.item(row, 1).text())
+			value = int(self.item(row, 2).text())
+			items.append([name, weight, value])
+		print(items)
+		capacity = int(a_window.capacity_text.text())
+		start = time.time()
+		solution = knapsack_BB(items, capacity)
+		solution_items = solution[2]
+		end = time.time()
+		print(end - start)
+		result = a_window.result_table2
+		result.setRowCount(0)
+		for i, itemSol in enumerate(solution_items):
+			row = result.rowCount()
+			result.insertRow(row)
+			result.setItem(i, 0, QTableWidgetItem(itemSol[0]))
+			result.setItem(i, 1, QTableWidgetItem(str(itemSol[1])))
+			print(itemSol)
+
+		a_window.StatsTable2.setItem(0, 0, QTableWidgetItem(str(solution[0])))
+		a_window.StatsTable2.setItem(1, 0, QTableWidgetItem(str(solution[1])))
+		a_window.StatsTable2.setItem(2, 0, QTableWidgetItem(str((end-start)*1000)+"ms"))
 class ResultTable(QTableWidget):
 	"""docstring for MyTable"""
 	def __init__(self,  parent=None):
@@ -124,10 +151,11 @@ class window(QWidget):
 		self.BB_label=QLabel("Branch and Bound ")
 		self.BB_label.setStyleSheet("font-family: seorge; font: bold 20px")
 		self.show_result_btn2=QPushButton("Afficher la solution")
+		self.show_result_btn2.clicked.connect(objects_table.showResult2)
 		#VBox3
 		v_box3=QVBoxLayout()
 		v_box3.addWidget(self.BB_label)
-			v_box3.addWidget(self.show_result_btn2)
+		v_box3.addWidget(self.show_result_btn2)
 		v_box3.addWidget(self.StatsTable2,1)
 		v_box3.addWidget(self.result_table2,4)
 
@@ -137,7 +165,7 @@ class window(QWidget):
 		h_box.addLayout(v_box2,1)
 		h_box.addLayout(v_box3,1)
 		self.setLayout(h_box)
-		self.setGeometry(100,100,1500,800)
+		self.setGeometry(0,0,1700,700)
 		self.setWindowTitle("Le problème du sac à dos")
 		
 		self.show()
