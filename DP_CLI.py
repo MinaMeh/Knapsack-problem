@@ -6,7 +6,7 @@ def knapsack_dp(items, C):
     tab = [(0, [0 for i in items]) for i in range(0, C + 1)]  # value, [item tab]
 
     for i, item in enumerate(items):
-        name, weight, value = item
+        weight, value = item
         for c in range(weight, C + 1):
             tabbefore = tab[c - weight]  # previous max tab to try adding this item to
             new_value = tabbefore[0] + value
@@ -20,19 +20,18 @@ def knapsack_dp(items, C):
     numbagged = sum(bagged)
     weight = sum(items[i][1] * n for i, n in enumerate(bagged))
     # convert to (iten, count) pairs) in name order
-    bagged = sorted((items[i][NAME], n) for i, n in enumerate(bagged) if n)
+    bagged = sorted((items[i][WEIGHT], n) for i, n in enumerate(bagged) if n)
     return value, weight, bagged
 
-NAME, WEIGHT, VALUE = range(3)
+WEIGHT, VALUE = range(2)
 
 capacity= int(input("Donnez la capacité du sac à dos: "))
 nbr= int(input("Donnez le nombre d'objets: "))
 items= []
 for i in range(nbr):
-    name=input("nom de l'objet: ")
     weight=int(input("poids de l\'objet: "))
     value=int(input("valeur de l\'objet: "))
-    items.append([name,weight,value])
+    items.append([weight,value])
 
 print(items)
 print (knapsack_dp(items,capacity))

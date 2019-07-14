@@ -1,5 +1,5 @@
 def knapsack_dp(items, C):
-    NAME, WEIGHT, VALUE = range(3)
+    WEIGHT, VALUE = range(2)
 
     # order by max value per item weight
     items = sorted(items, key=lambda item: item[VALUE] / float(item[WEIGHT]), reverse=True)
@@ -8,7 +8,7 @@ def knapsack_dp(items, C):
     tab = [(0, [0 for i in items]) for i in range(0, C + 1)]  # value, [item tab]
 
     for i, item in enumerate(items):
-        name, weight, value = item
+        weight, value = item
         for c in range(weight, C + 1):
             tabbefore = tab[c - weight]  # previous max tab to try adding this item to
             new_value = tabbefore[0] + value
@@ -20,8 +20,8 @@ def knapsack_dp(items, C):
 
     value, bagged = tab[C]
     numbagged = sum(bagged)
-    weight = sum(items[i][1] * n for i, n in enumerate(bagged))
+    weight = sum(items[i][0] * n for i, n in enumerate(bagged))
     # convert to (iten, count) pairs) in name order
-    bagged = sorted((items[i][NAME], n) for i, n in enumerate(bagged) if n)
+    bagged = sorted((items[i][WEIGHT], n) for i, n in enumerate(bagged) if n)
     return value, weight, bagged
 

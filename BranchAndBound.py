@@ -1,5 +1,5 @@
 def knapsack_BB(items, capacity):
-    NAME, WEIGHT, VALUE = range(3)
+    WEIGHT, VALUE = range(2)
 
     # order by max value per item weight
     items = sorted(items, key=lambda item: item[VALUE] / float(item[WEIGHT]), reverse=True)
@@ -56,12 +56,12 @@ def knapsack_BB(items, capacity):
         itemCount=sum(set)
         if itemCount==0:
             flag=False
-    bagged = sorted((items[i][NAME], n) for i, n in enumerate(tab) if n)
+    bagged = sorted((items[i][WEIGHT], n) for i, n in enumerate(tab) if n)
 
     return max_value,max_weight,bagged
 '''
 capacity=8
-items= [['a', 1, 10], ['b', 3, 40],['c', 4, 50],['d', 5, 70]]
+items= [[ 1, 10], [ 3, 40],[ 4, 50],[ 5, 70]]
 
 print(items)
 print (knapsack_BB(items,capacity))
