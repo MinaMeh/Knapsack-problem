@@ -1,0 +1,2 @@
+nombre d'iterations: 460;
+taille de la population: 50;

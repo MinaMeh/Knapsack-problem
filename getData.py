@@ -23,6 +23,19 @@ def getData(filename) :
             test=fin_de_chaine.split(';')[0] ;
             nb=int(test.split(': ')[1],10);
 
+        if (str.rfind("famille: ") > -1):
+            ind=str.rfind("famille: ");
+            fin_de_chaine=str[ind:];
+            test=fin_de_chaine.split(';')[0] ;
+            famille=(test.split(': ')[1]);
+
+        if (str.rfind("taille: ") > -1):
+            ind=str.rfind("taille: ");
+            fin_de_chaine=str[ind:];
+            test=fin_de_chaine.split(';')[0] ;
+            taille=(test.split(': ')[1]);
+
+
         if (str.split(' ')[0].rfind("begin")> -1):
             end=1
 
@@ -33,5 +46,5 @@ def getData(filename) :
         tab[i][0]=(int(str.split('\t')[0]))
         tab[i][1]=(int(str.split('\t')[1]))
 
-    return tab,nb,cap
+    return tab,nb,cap,famille,taille
 #print(getData("test.txt"))

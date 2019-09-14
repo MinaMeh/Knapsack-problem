@@ -1,0 +1,1 @@
+RSGreedy,DifficilePetite.txt,2002672,0.20701193809509277,10,600,0.8,450

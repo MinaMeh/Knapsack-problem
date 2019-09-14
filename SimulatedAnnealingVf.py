@@ -145,8 +145,18 @@ def simulatedAnnealing(itemsIn,capacity,solinit,samplingSize,temperatureInit,coo
                 #print("remplacement pas une meilleur sol")
         temperature= cool(temperature, coolingFactor)
     #print(bestSol)
+    objects=[]
+    solution=[]
     Nsol= binaryToNsolution(bestSol, tab_max_nb)
-    return items_sorted, Nsol, bestEval
+    for i,item in enumerate(Nsol):
+        if item!=0:
+            objects.append(items[i])
+            solution.append(item)
+    poids=0
+    for i,obj in enumerate(objects):
+        poids+=obj[0]*solution[i]
+
+    return objects,solution, Nsol, bestEval,poids
 
 #test
 #items= [[3, 10], [5, 3],[3,5]]1

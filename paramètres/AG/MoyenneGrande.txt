@@ -1,0 +1,4 @@
+nombre de tours: 10
+nombre de solutions: 10
+taille de tournoi: 2
+probabilite de mutation: 0.05

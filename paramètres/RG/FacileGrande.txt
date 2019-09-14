@@ -1,0 +1,4 @@
+sampling size: 10;
+temperature initiale: 400;
+taux de refroidissement: 0.8;
+temperature finale: 250;

@@ -199,10 +199,18 @@ def geneticAlgorithm(items, capacity,nb_tour, nb_solutions, nb_per_group, proba_
             evals[ind_worst]= eval_fils
         bestNsol= binaryToNsolution(best_solution, tab_max_nb_items)
         gain_tot=eval_solution(best_solution,tab_gain_new)
+        solution=[]
+        objects=[]
+        poids=0
+        for i, item in enumerate(bestNsol):
+            if item!=0:
+                objects.append(items[i])
+                solution.append(item)
+                poids+=item*items[i][0]
        # print("le gain",gain_tot)
         #print('best solution==', bestNsol)
-    return items_sorted,bestNsol,gain_tot
-
+    return objects,solution,gain_tot,poids
+'''
 #items= [[2,5],[3,2],[5,10],[7,20]]
 items,nb,cap= getData()
 
@@ -213,3 +221,4 @@ listn,sol,gainT=geneticAlgorithm(items,cap,20,100,2,0.05)
 end = time.time()
 print(gainT,"\t temps :",end-start)
 
+'''

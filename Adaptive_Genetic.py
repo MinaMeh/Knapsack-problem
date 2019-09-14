@@ -247,13 +247,11 @@ def geneticAlgorithm():
         maxs=bestChromosomes.count(Chromosomes[indexBestValue])
         if maxs==kTimes: break
         runs=runs+1
-
-        #print('run number',runs)
-        t=t+1
-        if (t% T==0):
-        #if (runs==runSetting):
+        
+        if (runs==runSetting):
+            #print('dans le if ')
             populationSize=populationSize+ populationSize*2
-            #print('Population augmentée au round',r,' ')
+            runs=0 ##Ajouter
 
     indexResult=np.argmax(bestFitness)
     Gain=max(bestFitness)
@@ -264,7 +262,7 @@ def geneticAlgorithm():
 
 
 
-def input(runSettingIn,populationSizeIn):
+def input(runSettingIn,populationSizeIn,filename):
     global runSetting
     global populationSize
     global C
@@ -272,14 +270,14 @@ def input(runSettingIn,populationSizeIn):
     runSetting = runSettingIn
     populationSize = populationSizeIn
 
-    tab,N,C=getData("test.txt")
+    tab,N,C=getData(filename)
 
     for i in range(0,N):
         Weight.append(tab[i][0])
         Profits.append(tab[i][1])
     populationSize=populationSizeIn
     runSetting=runSettingIn
-
+'''
 test=getData("test.txt")
 items= test[0]
 C=test[2]
@@ -291,7 +289,7 @@ gain=geneticAlgorithm()
 end = time.time()
 print("gain : ",gain,"\t temps :",end-start)
 
-
+'''
 '''
 Les paramètres:
 AG chinois:

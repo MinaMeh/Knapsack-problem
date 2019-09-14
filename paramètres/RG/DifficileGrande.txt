@@ -1,0 +1,6 @@
+sampling size: 10
+temperature initiale: 600
+taux de refroidissement: 0.8
+temperature finale: 450
+gain: 2005262
+temps: 1.475055456161499
