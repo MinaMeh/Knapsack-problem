@@ -17,4 +17,6 @@ Resolving the unbounded knapsack problem
      **Simulated Annealing
      **Adaptatif genetic algorithme
 
-![Screenshot](screenshot.png?raw=true "The application screenshot")
+![Screenshot](screenshots/screenshot.png?raw=true "The application screenshot")
+![Screenshot](screenshots/screenshot1.png?raw=true "The application screenshot")
+![Screenshot](sscreenshots/creenshot2.png?raw=true "The application screenshot")
